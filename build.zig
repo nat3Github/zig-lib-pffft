@@ -26,14 +26,15 @@ pub fn build(b: *std.Build) !void {
         .language = .c,
     });
 
-    const test_mod = b.createModule(.{
+    const root_mod = b.addModule("pffft", .{
         .root_source_file = b.path("zig-source/root.zig"),
         .optimize = optimize,
         .target = target,
     });
-    test_mod.addImport("pffft", pffft_mod);
+    root_mod.addImport("pffft", pffft_mod);
+
     const lib_test = b.addTest(.{
-        .root_module = test_mod,
+        .root_module = root_mod,
         .target = target,
         .optimize = optimize,
     });

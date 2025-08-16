@@ -1,5 +1,5 @@
 const std = @import("std");
-const pf = @import("pffft"); // Assumed to contain all C function bindings and struct/enum definitions.
+pub const c = @import("pffft"); // Assumed to contain all C function bindings and struct/enum definitions.
 const float_tolerance = 0.001;
 
 const test_fft_size = 512;
@@ -93,8 +93,8 @@ fn assert_eql(T: type, a: []T, b: []T) !void {
 }
 
 const Type = enum(c_uint) {
-    real = pf.PFFFT_REAL,
-    complex = pf.PFFFT_COMPLEX,
+    real = c.PFFFT_REAL,
+    complex = c.PFFFT_COMPLEX,
 };
 
 /// for Complex Valued FFTs, input is input signal
@@ -118,14 +118,14 @@ pub fn Pfft(float: type, complex_or_real: type) type {
     return struct {
         const complex = std.math.Complex(float);
         const f32p = (float == f32);
-        setup: ?*if (f32p) pf.PFFFT_Setup else pf.PFFFTD_Setup = null,
-        const f_simd_arch = if (f32p) pf.pffft_simd_arch else pf.pffftd_simd_arch;
-        const f_simd_size = if (f32p) pf.pffft_simd_size else pf.pffftd_simd_size;
-        const f_new_setup = if (f32p) pf.pffft_new_setup else pf.pffftd_new_setup;
-        const f_is_power_of_two = if (f32p) pf.pffft_is_power_of_two else pf.pffftd_is_power_of_two;
-        const f_is_valid_size = if (f32p) pf.pffft_is_valid_size else pf.pffftd_is_valid_size;
-        const f_destroy_setup = if (f32p) pf.pffft_destroy_setup else pf.pffftd_destroy_setup;
-        const f_transform_ordered = if (f32p) pf.pffft_transform_ordered else pf.pffftd_transform_ordered;
+        setup: ?*if (f32p) c.PFFFT_Setup else c.PFFFTD_Setup = null,
+        const f_simd_arch = if (f32p) c.pffft_simd_arch else c.pffftd_simd_arch;
+        const f_simd_size = if (f32p) c.pffft_simd_size else c.pffftd_simd_size;
+        const f_new_setup = if (f32p) c.pffft_new_setup else c.pffftd_new_setup;
+        const f_is_power_of_two = if (f32p) c.pffft_is_power_of_two else c.pffftd_is_power_of_two;
+        const f_is_valid_size = if (f32p) c.pffft_is_valid_size else c.pffftd_is_valid_size;
+        const f_destroy_setup = if (f32p) c.pffft_destroy_setup else c.pffftd_destroy_setup;
+        const f_transform_ordered = if (f32p) c.pffft_transform_ordered else c.pffftd_transform_ordered;
 
         // prepare for performing transforms of size N -- the returned
         // PFFFT_Setup structure is read-only so it can safely be shared by
@@ -185,7 +185,7 @@ pub fn Pfft(float: type, complex_or_real: type) type {
             const x: [*c]float = @ptrCast(input_buffer.ptr);
             const y: [*c]float = @ptrCast(output_buffer.ptr);
             const w: [*c]float = if (working_buffer) |wb| @ptrCast(wb.ptr) else null;
-            f_transform_ordered(self.setup, x, y, w, if (inverse) pf.PFFFT_BACKWARD else pf.PFFFT_FORWARD);
+            f_transform_ordered(self.setup, x, y, w, if (inverse) c.PFFFT_BACKWARD else c.PFFFT_FORWARD);
         }
         /// for real valued ffts the output / input holds only 0..N/2+1 frequency bins, and DC and Nyquists imaginary parts are always zero
         /// note the special encoding of the first index where the real parts of the DC and Nyquist Component
