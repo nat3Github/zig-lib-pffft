@@ -6,7 +6,7 @@ const test_fft_size = 512;
 const test_seed = 234234234234;
 test "complex" {
     const alloc = std.testing.allocator;
-    var xorrand = std.Random.DefaultPrng.init();
+    var xorrand = std.Random.DefaultPrng.init(test_seed);
     const ran = xorrand.random();
 
     const F = f64;
@@ -42,7 +42,7 @@ test "complex" {
 }
 test "real" {
     const alloc = std.testing.allocator;
-    var xorrand = std.Random.DefaultPrng.init();
+    var xorrand = std.Random.DefaultPrng.init(test_seed);
     const ran = xorrand.random();
 
     const F = f32;
