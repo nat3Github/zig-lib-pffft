@@ -3,16 +3,7 @@
     .name = .pffft,
     .version = "0.0.0",
     .minimum_zig_version = "0.14.1",
-    .dependencies = .{
-        .update = .{
-            .url = "git+https://github.com/nat3Github/zig-lib-update#4dae993bd847373da3bdd7504d87a09e0c218648",
-            .hash = "update-0.0.0-k7lwTwoUAADRQhbBE02wHAuT4zpOeLcZUvQr5tx0xjFD",
-        },
-        .pffft = .{
-            .url = "git+https://github.com/nat3Github/zig-lib-pffft#d36802669483a2a3ba6a89c28e39a8d63cc43df1",
-            .hash = "pffft-0.0.0-7Tw5MXFMAgD_VkwVLTH_KbOHAoSQ8XXN8H3D4gdNVv0Z",
-        },
-    },
+    .dependencies = .{},
     .paths = .{
         "build.zig",
         "build.zig.zon",
@@ -22,6 +13,8 @@
         "pffft_priv_impl.h",
         "pffft_common.c",
         "pffft_double.c",
+        "pffft_double.h",
+        "zig-source",
         // For example...
         //"LICENSE",
         //"README.md",
