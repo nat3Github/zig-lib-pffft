@@ -1,26 +1,8 @@
 const std = @import("std");
-const update = @import("update");
-const deps: []const update.GitDependency = &.{
-    .{
-        // update self
-        .url = "https://github.com/nat3Github/zig-lib-update",
-        .branch = "main",
-    },
-    .{
-        // update
-        .url = "https://github.com/nat3Github/zig-lib-pffft",
-        .branch = "zig",
-    },
-};
 
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
-    if (update.updateDependencies(b, deps, .{
-        .name = "update",
-        .optimize = optimize,
-        .target = target,
-    })) return;
 
     const test_step = b.step("test", "Run unit tests");
 
