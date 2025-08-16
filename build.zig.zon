@@ -1,0 +1,24 @@
+.{
+    .fingerprint = 0x51d72663949aff62,
+    .name = .audioflux,
+    .version = "0.0.0",
+    .minimum_zig_version = "0.14.1",
+    .dependencies = .{
+        // .zigwin32 = .{
+        //     .url = "git+https://github.com/marlersoft/zigwin32#d21b419d808215e1f82605fdaddc49750bfa3bca",
+        //     .hash = "zigwin32-25.0.28-preview-AAAAAI0J-wP-8_KKo4Yjr33XLhVhlJmeagGUedByaOnX",
+        // },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "simd",
+        "pffft.h",
+        "pffft.c",
+        "pffft_priv_impl.h",
+
+        // For example...
+        //"LICENSE",
+        //"README.md",
+    },
+}
