@@ -133,9 +133,9 @@ pub fn Pfft(float: type, complex_or_real: type) type {
         pub fn init(comptime N: usize) !@This() {
             const size = comptime to_c_int(N) catch @compileError("int does not fit");
             const t: Type = if (std.math.Complex(float) == complex_or_real) .complex else if (float == complex_or_real) .real else unreachable;
-            const simd_arch = f_simd_arch();
-            const simd_size = f_simd_size();
-            std.log.warn("PFFT: simd: {s}, size: {}", .{ simd_arch, simd_size });
+            // const simd_arch = f_simd_arch();
+            // const simd_size = f_simd_size();
+            // std.log.warn("PFFT: simd: {s}, size: {}", .{ simd_arch, simd_size });
             const res = f_new_setup(
                 size,
                 @intFromEnum(t),
