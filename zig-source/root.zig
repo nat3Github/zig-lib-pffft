@@ -130,16 +130,13 @@ pub fn Pfft(float: type, complex_or_real: type) type {
         // prepare for performing transforms of size N -- the returned
         // PFFFT_Setup structure is read-only so it can safely be shared by
         // multiple concurrent threads.
-        pub fn init(comptime N: usize) !@This() {
-            const size = comptime to_c_int(N) catch @compileError("int does not fit");
+        pub fn init(N: usize) !@This() {
+            const size = to_c_int(N) catch @panic("int does not fit");
             const t: Type = if (std.math.Complex(float) == complex_or_real) .complex else if (float == complex_or_real) .real else unreachable;
             // const simd_arch = f_simd_arch();
             // const simd_size = f_simd_size();
             // std.log.warn("PFFT: simd: {s}, size: {}", .{ simd_arch, simd_size });
-            const res = f_new_setup(
-                size,
-                @intFromEnum(t),
-            );
+            const res = f_new_setup(size, @intFromEnum(t));
             return .{ .setup = res };
         }
         pub fn deinit(self: *@This()) void {
