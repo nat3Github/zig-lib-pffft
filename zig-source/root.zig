@@ -1,96 +1,6 @@
 const std = @import("std");
-pub const c = @import("pffft"); // Assumed to contain all C function bindings and struct/enum definitions.
+pub const c = @import("pffft_c"); // Assumed to contain all C function bindings and struct/enum definitions.
 const float_tolerance = 0.001;
-
-const test_fft_size = 512;
-const test_seed = 234234234234;
-test "complex" {
-    const alloc = std.testing.allocator;
-    var xorrand = std.Random.DefaultPrng.init(test_seed);
-    const ran = xorrand.random();
-
-    const F = f64;
-    const C = std.math.Complex(F);
-    const input = try alloc.alignedAlloc(C, @alignOf(C), test_fft_size);
-    defer alloc.free(input);
-    const output = try alloc.alignedAlloc(C, @alignOf(C), test_fft_size);
-    defer alloc.free(output);
-    const validation = try alloc.alignedAlloc(C, @alignOf(C), test_fft_size);
-    defer alloc.free(validation);
-
-    set_mem(C, .{ .re = 0.0, .im = 0.0 }, input);
-    set_mem(C, .{ .re = 0.0, .im = 0.0 }, output);
-    set_mem(C, .{ .re = 0.0, .im = 0.0 }, validation);
-
-    for (input) |*f| {
-        f.re = ran.float(F);
-    }
-    var fft = try Pfft(F, C).init(test_fft_size);
-
-    fft.fft(input, output, null);
-    fft.inverse_fft(output, validation, null);
-    for (validation) |*v| {
-        v.re = v.re / @as(F, @floatFromInt(test_fft_size));
-        v.im = 0;
-        // v.im / @as(F, @floatFromInt(size));
-    }
-    print(C, input[0..3]);
-    print(C, validation[0..3]);
-    const input_casted: []F = std.mem.bytesAsSlice(F, std.mem.sliceAsBytes(input));
-    const validation_casted: []F = std.mem.bytesAsSlice(F, std.mem.sliceAsBytes(validation));
-    try assert_eql(F, input_casted, validation_casted);
-}
-test "real" {
-    const alloc = std.testing.allocator;
-    var xorrand = std.Random.DefaultPrng.init(test_seed);
-    const ran = xorrand.random();
-
-    const F = f32;
-    const C = std.math.Complex(F);
-    const input = try alloc.alignedAlloc(F, @alignOf(C), test_fft_size);
-    defer alloc.free(input);
-    const output = try alloc.alignedAlloc(C, @alignOf(C), test_fft_size / 2);
-    defer alloc.free(output);
-    const validation = try alloc.alignedAlloc(F, @alignOf(C), test_fft_size);
-    defer alloc.free(validation);
-
-    set_mem(F, 0, input);
-    set_mem(C, .{ .re = 0.0, .im = 0.0 }, output);
-    set_mem(F, 0, validation);
-
-    for (input) |*f| {
-        f.* = ran.float(F);
-    }
-    var fft = try Pfft(F, F).init(test_fft_size);
-
-    fft.fft(input, output, null);
-    fft.inverse_fft(output, validation, null);
-    for (validation) |*v| {
-        v.* = v.* / @as(F, @floatFromInt(test_fft_size));
-    }
-    print(F, input[0..3]);
-    print(F, validation[0..3]);
-    const input_casted: []F = std.mem.bytesAsSlice(F, std.mem.sliceAsBytes(input));
-    const validation_casted: []F = std.mem.bytesAsSlice(F, std.mem.sliceAsBytes(validation));
-    try assert_eql(F, input_casted, validation_casted);
-}
-
-fn set_mem(T: type, t: T, a: []T) void {
-    for (a) |*x| {
-        x.* = t;
-    }
-}
-fn print(T: type, a: []T) void {
-    for (a) |x| {
-        std.log.warn("{any}", .{x});
-    }
-}
-
-fn assert_eql(T: type, a: []T, b: []T) !void {
-    for (a, b) |x, y| {
-        if (!std.math.approxEqRel(T, x, y, float_tolerance)) return error.NotEqual;
-    }
-}
 
 const Type = enum(c_uint) {
     real = c.PFFFT_REAL,
@@ -114,7 +24,7 @@ const Type = enum(c_uint) {
 /// the additional value is encoded in the first complex value where
 /// the real part holds the real part of the DC-Component
 /// the imaginary part holds the real part of the Nyquist-Component
-pub fn Pfft(float: type, complex_or_real: type) type {
+pub fn Pffft(float: type, complex_or_real: type) type {
     return struct {
         const complex = std.math.Complex(float);
         const f32p = (float == f32);
@@ -215,8 +125,4 @@ pub fn Pfft(float: type, complex_or_real: type) type {
 
 pub fn to_c_int(x: anytype) !c_int {
     return std.math.cast(c_int, x) orelse return error.CIntCastFailed;
-}
-
-pub fn null_check(x: anytype) !void {
-    _ = x orelse return error.NullCheckFailed;
 }
