@@ -2,7 +2,7 @@
     .fingerprint = 0x928719b31393ced,
     .name = .pffft,
     .version = "0.0.0",
-    .minimum_zig_version = "0.15.1",
+    .minimum_zig_version = "0.15.2",
     .dependencies = .{
         .update_tool = .{
             .url = "git+https://github.com/nat3Github/zig-lib-update#a0ef597d694e1d5f9752841cbf737095bb9c4cf9",
