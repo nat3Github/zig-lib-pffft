@@ -2,13 +2,8 @@
     .fingerprint = 0x928719b31393ced,
     .name = .pffft,
     .version = "0.0.0",
-    .minimum_zig_version = "0.15.2",
-    .dependencies = .{
-        .update_tool = .{
-            .url = "git+https://github.com/nat3Github/zig-lib-update#a0ef597d694e1d5f9752841cbf737095bb9c4cf9",
-            .hash = "update_tool-1.0.0-MwAI-VgaAAB2y3AVVByTm1A6kQhyGB-QzWhGObaJhaKY",
-        },
-    },
+    .minimum_zig_version = "0.16.0",
+    .dependencies = .{},
     .paths = .{
         "build.zig",
         "build.zig.zon",
@@ -20,8 +15,6 @@
         "pffft_double.c",
         "pffft_double.h",
         "zig-source",
-        // For example...
-        //"LICENSE",
-        //"README.md",
+        "zig-tests",
     },
 }

@@ -2,6 +2,8 @@ const std = @import("std");
 pub const pffft = @import("pffft");
 const Pfft = pffft.Pffft;
 
+pub fn main() void {}
+
 const float_tolerance = 0.001;
 
 const test_fft_size = 512;
