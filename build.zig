@@ -68,22 +68,18 @@ pub fn build(b: *std.Build) !void {
     pffft_translate_c.addIncludePath(b.path(""));
     const pffft_c_mod = pffft_translate_c.addModule("pffft_c");
 
-    const c_flags: []const []const u8 = &.{ "-DPFFFT_ENABLE_NEON", "-O3" };
-
     pffft_c_mod.addCSourceFile(.{
         .file = b.path("pffft.c"),
         .language = .c,
-        .flags = c_flags,
+        .flags = &.{ "-DPFFFT_ENABLE_NEON", "-O3" },
     });
     pffft_c_mod.addCSourceFile(.{
         .file = b.path("pffft_double.c"),
         .language = .c,
-        .flags = c_flags,
     });
     pffft_c_mod.addCSourceFile(.{
         .file = b.path("pffft_common.c"),
         .language = .c,
-        .flags = c_flags,
     });
 
     const root_mod = b.addModule("pffft", .{
