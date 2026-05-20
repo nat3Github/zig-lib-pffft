@@ -66,7 +66,7 @@ pub fn build(b: *std.Build) !void {
         .root_source_file = b.path("zig-source/lib.h"),
     });
     pffft_translate_c.addIncludePath(b.path(""));
-    const pffft_c_mod = pffft_translate_c.createModule();
+    const pffft_c_mod = pffft_translate_c.addModule("pffft_c");
 
     const c_flags: []const []const u8 = &.{ "-DPFFFT_ENABLE_NEON", "-O3" };
 
